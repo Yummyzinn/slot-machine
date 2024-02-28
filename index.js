@@ -7,6 +7,29 @@
 // 7. play again
 const prompt = require('prompt-sync')();
 
+const rows = 3;
+const cols = 3;
+
+const symbols_count = {
+    "A": 2,
+    "B": 4,
+    "C": 6,
+    "D": 8
+}
+
+const symbol_values = {
+    "A": 5,
+    "B": 4,
+    "C": 3,
+    "D": 2
+}
+
+
+
+
+
+
+
 const deposit = () => {
     while (true) {
         const depositAmount = prompt("Enter a deposit amount: ");
@@ -34,12 +57,12 @@ const getNumberOfLines = () => {
   }
 }
 
-const getBet = (balance) =>{
+const getBet = (balance, lines) =>{
     while(true) {
-        const bet = prompt("Enter the total bet: ")
+        const bet = prompt("Enter the total bet per line: ")
         const numberBet = parseFloat(bet)
     
-        if (isNaN(numberBet) || numberBet <= 0  || numberBet > balance){
+        if (isNaN(numberBet) || numberBet <= 0  || numberBet > balance / lines){
             console.log("invalid bet, try again")
         }
         else{
@@ -48,8 +71,31 @@ const getBet = (balance) =>{
       }
 }
 
+const spin = () =>{
+    const symbols = [];
+    for (const [symbol, count] of Object.entries(symbols_count)) {
+        for(let i = 0; i < count; i++ ){
+            symbols.push(symbol);
+        }
 
+    }
+    const reels = [];
+    for (let i = 0; i<cols; i++){
+        reels.push([])
+        const reelssymbols = [...symbols];
+        for(let j =0; j<rows; j++){
+            const randomindex = Math.floor( Math.random() * reelssymbols.length)
+            const selectedsymbol = reelssymbols[randomindex]
+            reels[i].push(selectedsymbol);
+            reelssymbols.splice(randomindex, 1)
+        }
+    }
+    return reels;
+}
+spin()
+const reels = spin()
+console.log(reels)
 
 let balance = deposit()
 const numberOfLines = getNumberOfLines()
-const bet = getBet(balance)
+const bet = getBet(balance, numberOfLines)
